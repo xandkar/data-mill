@@ -1,0 +1,12 @@
+{application, dmill_stacker,
+ [
+  {description, ""},
+  {vsn, "0.1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { dmill_stacker, []}},
+  {env, []}
+ ]}.
