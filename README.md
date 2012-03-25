@@ -21,6 +21,9 @@ A system to organize automated data collection-and-processing pipelines.
 Architectural Overview
 ----------------------
 
+* __sensor__
+    - SOURCE: anything that produces the output we desire to analyze
+
 * [__stacker__] (http://en.wikipedia.org/wiki/Stacker)
     - CLIENT: lives on target sensor machines and stacks raw outputs
     - Executed via cron
