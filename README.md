@@ -35,12 +35,13 @@ Architectural Overview
     - Connects to client machines and picks-up data files from the queue
       directory
     - Optionally, receives data directly from stackers via UDP
-    - Dispatches parsing of raw data to appropriate parsers
+    - Dispatches filtering of raw data through appropriate sieves
     - Forwards clean data to final consumers for presentation and/or analysis
       (Graphite, Cacti, Munin, a data scientist, etc).
 
-* __dmill_parser__
-    - PLUG-IN: lives on the mother-ship machine(s) and parses raw data
-    - Executed by the dmill_reclaimer on the appropriate raw data types
-    - stdin: raw data
+* __sieve__
+    - PLUG-IN: lives with dmill_reclaimer and extracts target data out of raw
+      sensor outputs
+    - Executed by the dmill_reclaimer on the appropriate raw output types
+    - stdin: raw output
     - stdout: formatted data
