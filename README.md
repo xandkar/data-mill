@@ -22,26 +22,25 @@ Architectural Overview
 ----------------------
 
 * [__stacker__] (http://en.wikipedia.org/wiki/Stacker)
-    - CLIENT: lives on target sensor machines and stacks data
+    - CLIENT: lives on target sensor machines and stacks raw outputs
     - Executed via cron
-    - Executes data-collection commands, compresses and stores their raw
-      outputs in a queue directory (for later pick-up by the reclaimer), using
-      filenames for meta-data;
+    - Executes data-collection, system commands, then compresses and stores
+      their raw outputs in a queue directory (for later pick-up by the
+      reclaimer), using filenames for meta-data
     - Optionally, pushes data to reclaimer via UDP
 
 * [__reclaimer__] (http://en.wikipedia.org/wiki/Reclaimer)
-    - SERVER: lives on mother-ship machine(s) and sorts stacked data
+    - SERVER: lives on mother-ship machine(s) and sorts through stacked
+      outputs, dispatching processing and delivery
     - Executed as a daemon
-    - Connects to client machines and picks-up data files from the queue
+    - Connects to client machines and picks-up raw output files from the queue
       directory
     - Optionally, receives data directly from stackers via UDP
-    - Dispatches filtering of raw data through appropriate sieves
-    - Forwards clean data to final consumers for presentation and/or analysis
-      (Graphite, Cacti, Munin, a data scientist, etc).
+    - Dispatches processing of raw outputs through appropriate sieves
+    - Delivers extracted data to final consumers for presentation and/or
+      analysis (Graphite, Cacti, Munin, a data scientist, etc).
 
 * __sieve__
-    - PLUG-IN: lives with reclaimer and extracts target data out of raw
-      sensor outputs
+    - PLUG-IN: lives with reclaimer(s), takes raw sensor output as input and
+      outputs formatted, extracted data
     - Executed by the reclaimer on the appropriate raw output types
-    - stdin: raw output
-    - stdout: formatted data
