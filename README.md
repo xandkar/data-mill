@@ -21,7 +21,7 @@ A system to organize automated data collection-and-processing pipelines.
 Architectural Overview
 ----------------------
 
-* [dmill_stacker] (http://en.wikipedia.org/wiki/Stacker)
+* [__stacker__] (http://en.wikipedia.org/wiki/Stacker)
     - CLIENT: lives on target sensor machines and stacks data
     - Executed via cron
     - Executes data-collection commands, compresses and stores their raw
@@ -29,7 +29,7 @@ Architectural Overview
       filenames for meta-data;
     - Optionally, pushes data to reclaimer via UDP
 
-* [dmill_reclaimer] (http://en.wikipedia.org/wiki/Reclaimer)
+* [__reclaimer__] (http://en.wikipedia.org/wiki/Reclaimer)
     - SERVER: lives on mother-ship machine(s) and sorts stacked data
     - Executed as a daemon
     - Connects to client machines and picks-up data files from the queue
@@ -40,8 +40,8 @@ Architectural Overview
       (Graphite, Cacti, Munin, a data scientist, etc).
 
 * __sieve__
-    - PLUG-IN: lives with dmill_reclaimer and extracts target data out of raw
+    - PLUG-IN: lives with reclaimer and extracts target data out of raw
       sensor outputs
-    - Executed by the dmill_reclaimer on the appropriate raw output types
+    - Executed by the reclaimer on the appropriate raw output types
     - stdin: raw output
     - stdout: formatted data
