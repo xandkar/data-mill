@@ -21,8 +21,12 @@ A system to organize automated data collection-and-processing pipelines.
 Architectural Overview
 ----------------------
 
+* __drill__
+    - SOURCE: system command that generates output containing data we're
+      interested in.
+
 * [__stacker__] (http://en.wikipedia.org/wiki/Stacker)
-    - CLIENT: lives on target sensor machines and stacks raw outputs
+    - CLIENT: lives on target drill machines and stacks raw outputs
     - Executed via cron
     - Executes data-collection, system commands, then compresses and stores
       their raw outputs in a queue directory (for later pick-up by the
@@ -41,6 +45,6 @@ Architectural Overview
       analysis (Graphite, Cacti, Munin, a data scientist, etc).
 
 * __sieve__
-    - PLUG-IN: lives with reclaimer(s), takes raw sensor output as input and
+    - PLUG-IN: lives with reclaimer(s), takes raw drill output as input and
       outputs formatted, extracted data
     - Executed by the reclaimer on the appropriate raw output types
