@@ -1,0 +1,18 @@
+{
+    "queue_dir": "/tmp/data-mill/queue",
+
+    "reapers": [
+        {
+            "name": "ifconfig",
+            "command": "ifconfig"
+        },
+        {
+            "name": "loadavg",
+            "command": "cat /proc/loadavg"
+        },
+        {
+            "name": "vmstat",
+            "command": "cat /proc/vmstat"
+        }
+    ]
+}
