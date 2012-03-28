@@ -21,7 +21,7 @@ A system to organize automated data collection-and-processing pipelines.
 Architectural Overview
 ----------------------
 
-* __reaper__
+* [__reaper__] (http://en.wikipedia.org/wiki/Reaper)
     - SOURCE: system command that generates output containing data we're
       interested in.
 
@@ -44,7 +44,7 @@ Architectural Overview
     - Delivers extracted data to final consumers for presentation and/or
       analysis (Graphite, Cacti, Munin, a data scientist, etc).
 
-* __sieve__
+* [__sieve__] (http://en.wikipedia.org/wiki/Sieve)
     - PLUG-IN: lives with reclaimer(s), takes raw reaper output as input and
       outputs formatted, extracted data
     - Executed by the reclaimer on the appropriate raw output types
