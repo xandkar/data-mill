@@ -1,0 +1,12 @@
+{application, datamill_reclaimer,
+ [
+  {description, ""},
+  {vsn, "0.1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { datamill_reclaimer_app, []}},
+  {env, []}
+ ]}.
