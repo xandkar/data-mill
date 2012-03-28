@@ -28,21 +28,21 @@ Architectural Overview
 
     * [__combine__] (http://en.wikipedia.org/wiki/Combine_harvester)
         - SOURCE and CLIENT: any external component that gathers data and sends
-          it to the reclaimer directly
+          it to the SERVER directly
 
     * [__sieve__] (http://en.wikipedia.org/wiki/Sieve)
-        - PLUG-IN: lives with reclaimer(s), takes raw reaper output as input
+        - PLUGIN: lives with SERVER(s), takes raw SOURCE output as input
           and outputs formatted, extracted data
-        - Executed by the reclaimer on the appropriate raw output types
+        - Executed by the SERVER on the appropriate raw output types
 
 * ### Internal componenets ###
     * [__stacker__] (http://en.wikipedia.org/wiki/Stacker)
-        - CLIENT: lives on target reaper machines and stacks raw outputs
+        - CLIENT: lives on target SOURCE machines and stacks raw outputs
         - Executed via cron
-        - Executes data-collection (reaper), system commands, then compresses
-          and stores their raw outputs in a queue directory (for later pick-up
-          by the reclaimer), using filenames for meta-data
-        - Optionally, pushes data to reclaimer via UDP
+        - Executes data-collection, system commands, then compresses and stores
+          their raw outputs in a queue directory (for later pick-up by the
+          SERVER), using filenames for meta-data
+        - Optionally, pushes data to SERVER via UDP
 
     * [__reclaimer__] (http://en.wikipedia.org/wiki/Reclaimer)
         - SERVER: lives on mother-ship machine(s) and sorts through stacked
@@ -50,7 +50,7 @@ Architectural Overview
         - Executed as a daemon
         - Connects to client machines and picks-up raw output files from the
           queue directory
-        - Optionally, receives data directly from stackers via UDP
-        - Dispatches processing of raw outputs through appropriate sieves
+        - Optionally, receives data directly from CLIENTs via UDP
+        - Dispatches processing of raw outputs through appropriate PLUGINs
         - Delivers extracted data to final consumers for presentation and/or
           analysis (Graphite, Cacti, Munin, a data scientist, etc).
