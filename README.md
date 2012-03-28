@@ -24,7 +24,11 @@ Architectural Overview
 * ### External componenets ###
     * [__reaper__] (http://en.wikipedia.org/wiki/Reaper)
         - SOURCE: system command that generates output containing data we're
-          interested in.
+          interested in
+
+    * [__combine__] (http://en.wikipedia.org/wiki/Combine_harvester)
+        - SOURCE and CLIENT: any external component that gathers data and sends
+          it to the reclaimer directly
 
     * [__sieve__] (http://en.wikipedia.org/wiki/Sieve)
         - PLUG-IN: lives with reclaimer(s), takes raw reaper output as input
