@@ -23,3 +23,4 @@ link:
 	@$(REBAR) escriptize skip_deps=true
 	@mkdir -p bin/
 	@mv apps/datamill_stacker/datamill_stacker bin/
+	@rm apps/datamill_reclaimer/datamill_reclaimer
