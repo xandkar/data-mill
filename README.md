@@ -15,7 +15,7 @@ http://en.wikipedia.org/wiki/Bulk_material_handling).
 Description
 -----------
 
-A system to organize automated data collection-and-processing pipelines.
+A framework to organize automated data collection-and-processing pipelines.
 
 
 Architectural Overview
