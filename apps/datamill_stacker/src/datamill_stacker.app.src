@@ -1,4 +1,4 @@
-{application, dmill_stacker,
+{application, datamill_stacker,
  [
   {description, ""},
   {vsn, "0.1"},
@@ -7,6 +7,6 @@
                   kernel,
                   stdlib
                  ]},
-  {mod, { dmill_stacker, []}},
+  {mod, { datamill_stacker, []}},
   {env, []}
  ]}.

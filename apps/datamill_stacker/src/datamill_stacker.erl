@@ -1,4 +1,4 @@
--module(dmill_stacker).
+-module(datamill_stacker).
 -export([main/1, do_harvest/2]).
 
 
