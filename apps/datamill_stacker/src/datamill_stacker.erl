@@ -58,7 +58,17 @@ get_reapers({ok, ReapersConfigJSON}) ->
 timestamp() ->
     {{Year, Month, Day}, {Hour, Minute, Second}} = {date(), time()},
     {_, _, MicroSecond} = now(),
-
-    Format = "~4.10.0B-~2.10.0B-~2.10.0B--~2.10.0B:~2.10.0B:~2.10.0B.~.10.0B",
     Fields = [Year, Month, Day, Hour, Minute, Second, MicroSecond],
+
+    Decimal4 = "~4.10.0B",  % 4-digit decimal number
+    Decimal2 = "~2.10.0B",  % 2-digit decimal number
+    DecimalX = "~.10.0B",   % any-number-of-digits decimal number
+    SepDate = "-",
+    SepTime = ":",
+
+    FormatDate = string:join([Decimal4, Decimal2, Decimal2], SepDate),
+    FormatTime = string:join([Decimal2, Decimal2, Decimal2], SepTime),
+
+    Format = FormatDate++"--"++FormatTime++"."++DecimalX,
+
     io_lib:format(Format, Fields).
