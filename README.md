@@ -38,19 +38,16 @@ Architectural Overview
 * ### Internal componenets ###
     * [__stacker__] (http://en.wikipedia.org/wiki/Stacker)
         - CLIENT: lives on target SOURCE machines and stacks raw outputs
-        - Executed via cron
-        - Executes data-collection, system commands, then compresses and stores
-          their raw outputs in a queue directory (for later pick-up by the
-          SERVER), using filenames for meta-data
-        - Optionally, pushes data to SERVER via UDP
+        - Executed via cron or as a daemon (not yet decided)
+        - Executes data-collection commands, then compresses and pushes their
+          outputs to the SERVER via SSH or UDP (depending on sensitivity of
+          data), using filenames for meta-data.
 
     * [__reclaimer__] (http://en.wikipedia.org/wiki/Reclaimer)
         - SERVER: lives on mother-ship machine(s) and sorts through stacked
           outputs, dispatching processing and delivery
         - Executed as a daemon
-        - Connects to client machines and picks-up raw output files from the
-          queue directory
-        - Optionally, receives data directly from CLIENTs via UDP
+        - Receives raw output files from CLIENT (SSH or UDP)
         - Dispatches processing of raw outputs through appropriate PLUGINs
         - Delivers extracted data to final consumers for presentation and/or
           analysis (Graphite, Cacti, Munin, a data scientist, etc).
