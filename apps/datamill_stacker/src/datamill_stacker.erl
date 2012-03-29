@@ -18,10 +18,12 @@ main([PathToReapersConfigJSON|_]) ->
 %%-----------------------------------------------------------------------------
 do_harvest({Reaper}, QueueDir) ->
     {ok, Hostname} = inet:gethostname(),
-    Timestamp = timestamp(),
     Name    = binary_to_list(proplists:get_value(<<"name">>, Reaper)),
     Command = binary_to_list(proplists:get_value(<<"command">>, Reaper)),
+
+    Timestamp = timestamp(),
     OutputRaw = os:cmd(Command),
+
     FileName = string:join([Hostname, Name, Timestamp], "--")++".out",
     FilePath = filename:join(QueueDir, FileName),
     ok = file:write_file(FilePath++".gz", OutputRaw, [compressed]).
