@@ -21,24 +21,20 @@ start() ->
     ok = crypto:start(),
     ok = ssh:start(),
 
-    ssh:daemon(
-        {127,0,0,1},
-        22222,
-        [
-            {system_dir, ?PATH_DIR__DATA_SSH},
-            {user_dir,   ?PATH_DIR__DATA_SSH},
-            {subsystems, [subsystem_spec([])]},
-            {nodelay,    true}
-        ]
-    ).
+    SubsysOpts = [],
+    SubsysName = "ssh_subsystem@datamill_reclaimer",
+    SubsysSpec = {SubsysName, {?MODULE, [SubsysOpts]}},
 
+    DaemonIP   = {127,0,0,1},
+    DaemonPort = 22222,
+    DaemonOpts = [
+        {system_dir, ?PATH_DIR__DATA_SSH},
+        {user_dir,   ?PATH_DIR__DATA_SSH},
+        {subsystems, [SubsysSpec]},
+        {nodelay,    true}
+    ],
 
-%%=============================================================================
-%% Internal
-%%=============================================================================
-
-subsystem_spec(Options) ->
-    {"ssh_subsystem@datamill_reclaimer", {?MODULE, Options}}.
+    ssh:daemon(DaemonIP, DaemonPort, DaemonOpts).
 
 
 %%=============================================================================
@@ -86,3 +82,8 @@ handle_msg({ssh_channel_up, ChanID, ConMgr}, State) ->
 %%-----------------------------------------------------------------------------
 terminate(_Reason, _State) ->
     ok.
+
+
+%%=============================================================================
+%% Internal
+%%=============================================================================
