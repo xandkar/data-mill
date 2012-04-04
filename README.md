@@ -18,6 +18,11 @@ Description
 A framework to organize automated data collection-and-processing pipelines.
 
 
+Development Status
+------------------
+Prototyping. Not ready for use.
+
+
 Architectural Overview
 ----------------------
 
