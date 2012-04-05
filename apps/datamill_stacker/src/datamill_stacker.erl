@@ -2,11 +2,20 @@
 -export([main/1, do_harvest/2]).
 
 
+-define(TIMEOUT, 5000).
+-define(SUBSYSTEM, "ssh_subsystem@datamill_reclaimer").
+-define(PATH_DIR__HOME,     os:getenv("HOME")).
+-define(PATH_DIR__DATA,     filename:join([?PATH_DIR__HOME, ".data-mill"])).
+-define(PATH_DIR__DATA_SSH, filename:join([?PATH_DIR__DATA, "ssh"])).
+
+
 %%-----------------------------------------------------------------------------
 main([PathToReapersConfigJSON|_]) ->
     {Reapers, QueueDir} = get_reapers(file:read_file(PathToReapersConfigJSON)),
 
     ok = filelib:ensure_dir(filename:join(QueueDir, "dummyfile")),
+    ok = crypto:start(),
+    ok = ssh:start(),
 
     Harvesters = [
         spawn_monitor(?MODULE, do_harvest, [R, QueueDir]) || R <- Reapers
@@ -24,9 +33,30 @@ do_harvest({Reaper}, QueueDir) ->
     Timestamp = timestamp(),
     OutputRaw = os:cmd(Command),
 
-    FileName = string:join([Hostname, Name, Timestamp], "--")++".out",
+    FileName = string:join([Hostname, Name, Timestamp], "--")++".out.gz",
     FilePath = filename:join(QueueDir, FileName),
-    ok = file:write_file(FilePath++".gz", OutputRaw, [compressed]).
+
+    ok = file:write_file(FilePath, OutputRaw, [compressed]),
+
+    OutputStructBin = term_to_binary({FileName, OutputRaw}, [{compressed, 9}]),
+
+    do_send(OutputStructBin).
+
+
+%%-----------------------------------------------------------------------------
+do_send(Data) ->
+    ServerAddr = "127.0.0.1",
+    ServerPort = 22222,
+    ConnectOptions = [
+        {user_dir, ?PATH_DIR__DATA_SSH},
+        {nodelay, true},
+        {silently_accept_hosts, true}
+    ],
+
+    {ok, ConnRef} = ssh:connect(ServerAddr, ServerPort, ConnectOptions),
+    {ok, ChannId} = ssh_connection:session_channel(ConnRef, infinity),
+    success = ssh_connection:subsystem(ConnRef, ChannId, ?SUBSYSTEM, ?TIMEOUT),
+    ok = ssh_connection:send(ConnRef, ChannId, 0, Data, ?TIMEOUT).
 
 
 %%-----------------------------------------------------------------------------
