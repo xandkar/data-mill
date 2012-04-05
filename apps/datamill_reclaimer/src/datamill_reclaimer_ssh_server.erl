@@ -18,11 +18,9 @@
 %%=============================================================================
 
 start() ->
+    ok = do_ensure_ssh_keys(),
     ok = crypto:start(),
     ok = ssh:start(),
-
-    ok = do_ensure_ssh_key({?PATH_FILE__SSH_KEY,    ?OS_CMD__SSH_KEY_GEN}),
-    ok = do_ensure_ssh_key({?PATH_FILE__SSH_HOSTKEY,?OS_CMD__SSH_HOSTKEY_GEN}),
 
     SubsysOpts = [],
     SubsysName = "ssh_subsystem@datamill_reclaimer",
@@ -91,23 +89,32 @@ terminate(_Reason, _State) ->
 %% Internal
 %%=============================================================================
 
-do_ensure_ssh_key({Path, Command}) ->
-    do_ensure_ssh_key(key_exists, filelib:is_file(Path), Path, Command).
+do_ensure_ssh_keys() ->
+    ok = do_ensure_path_or_cmd({?PATH_FILE__SSH_KEY,    ?OS_CMD__SSH_KEY_GEN}),
+    ok = do_ensure_path_or_cmd({?PATH_FILE__SSH_HOSTKEY,?OS_CMD__SSH_HOSTKEY_GEN}),
+    ok.
+
+%%-----------------------------------------------------------------------------
+%% @doc Check if given path exists, if not, execute given command
+%% @end
+%%-----------------------------------------------------------------------------
+do_ensure_path_or_cmd({Path, Command}) ->
+    do_ensure_path_or_cmd(key_exists, filelib:is_file(Path), Path, Command).
 
 
-do_ensure_ssh_key(key_exists, true, _, _) ->
+do_ensure_path_or_cmd(key_exists, true, _, _) ->
     ok;
-do_ensure_ssh_key(key_exists, false, Path, Command) ->
-    do_ensure_ssh_key(key_dir, filelib:ensure_dir(Path), Command).
+do_ensure_path_or_cmd(key_exists, false, Path, Command) ->
+    do_ensure_path_or_cmd(key_dir, filelib:ensure_dir(Path), Command).
 
 
-do_ensure_ssh_key(key_dir, ok, Command) ->
-    do_ensure_ssh_key(key_gen, datamill_reclaimer_lib:os_cmd(Command));
-do_ensure_ssh_key(key_dir, Error, _) ->
+do_ensure_path_or_cmd(key_dir, ok, Command) ->
+    do_ensure_path_or_cmd(key_gen, datamill_reclaimer_lib:os_cmd(Command));
+do_ensure_path_or_cmd(key_dir, Error, _) ->
     {error, Error}.
 
 
-do_ensure_ssh_key(key_gen, {ok,   _Output}) ->
+do_ensure_path_or_cmd(key_gen, {ok,   _Output}) ->
     ok;
-do_ensure_ssh_key(key_gen, {error, Reason}) ->
+do_ensure_path_or_cmd(key_gen, {error, Reason}) ->
     {error, Reason}.
