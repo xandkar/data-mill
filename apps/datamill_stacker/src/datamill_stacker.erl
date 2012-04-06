@@ -7,6 +7,11 @@
 -define(PATH_DIR__HOME,     os:getenv("HOME")).
 -define(PATH_DIR__DATA,     filename:join([?PATH_DIR__HOME, ".data-mill"])).
 -define(PATH_DIR__DATA_SSH, filename:join([?PATH_DIR__DATA, "ssh"])).
+%%
+%% Basic binary constructor from:
+%% https://github.com/erlang/otp/blob/master/lib/ssh/src/ssh.hrl
+%%
+-define(UINT32(X), X:32/unsigned-big-integer).
 
 
 %%-----------------------------------------------------------------------------
@@ -45,6 +50,9 @@ do_harvest({Reaper}, QueueDir) ->
 
 %%-----------------------------------------------------------------------------
 do_send(Data) ->
+    Len = size(Data),
+    Bin = <<?UINT32(Len), Data/binary>>,
+
     ServerAddr = "127.0.0.1",
     ServerPort = 22222,
     ConnectOptions = [
@@ -56,7 +64,7 @@ do_send(Data) ->
     {ok, ConnRef} = ssh:connect(ServerAddr, ServerPort, ConnectOptions),
     {ok, ChannId} = ssh_connection:session_channel(ConnRef, infinity),
     success = ssh_connection:subsystem(ConnRef, ChannId, ?SUBSYSTEM, ?TIMEOUT),
-    ok = ssh_connection:send(ConnRef, ChannId, 0, Data, ?TIMEOUT).
+    ok = ssh_connection:send(ConnRef, ChannId, 0, Bin, ?TIMEOUT).
 
 
 %%-----------------------------------------------------------------------------

@@ -14,3 +14,10 @@
 
 -define(OS_CMD__SSH_HOSTKEY_GEN,
     "ssh-keygen -t dsa -b 1024 -N '' -f "++?PATH_FILE__SSH_HOSTKEY).
+
+
+%%
+%% Basic binary constructor from:
+%% https://github.com/erlang/otp/blob/master/lib/ssh/src/ssh.hrl
+%%
+-define(UINT32(X), X:32/unsigned-big-integer).

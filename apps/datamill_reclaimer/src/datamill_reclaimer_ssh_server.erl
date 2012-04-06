@@ -54,8 +54,8 @@ code_change(_OldVsn, State, _Extra) ->
 
 %%-----------------------------------------------------------------------------
 handle_ssh_msg({ssh_cm, _ConMgr, {data, _ChanID, 0, Data}}, State) ->
-    io:format("***** BEGIN DATA: ~n~p~n ***** END DATA ~n", [Data]),
-    {ok, State};
+    NewState = handle_data(Data, State, _Count=0),
+    {ok, NewState};
 
 handle_ssh_msg({ssh_cm, _ConMgr, {eof, ChanID}}, State) ->
     {stop, ChanID, State};
@@ -89,6 +89,32 @@ terminate(_Reason, _State) ->
 %% Internal
 %%=============================================================================
 
+%%-----------------------------------------------------------------------------
+handle_data(<<>>, State, _) ->
+    io:format("~p ~p DATA PATTERN 1~n", [State#state.cm, State#state.channel]),
+    State;
+
+handle_data(_Data = <<?UINT32(Len), Msg:Len/binary, Rest/binary>>,
+            State = #state{pending = <<>>},
+            Count) ->
+    io:format("~p ~p DATA PATTERN 2~n", [State#state.cm, State#state.channel]),
+    ChunkNumber = Count + 1,
+
+    {FileName, Output} = binary_to_term(Msg),
+    Format = "~n===== DATA BEGIN ~.10.0B: ~s~n~s~n===== DATA END~n~n",
+    io:format(Format, [ChunkNumber, FileName, Output]),
+    handle_data(Rest, State, Count);
+
+handle_data(Data, #state{pending= <<>>  }=State, _) ->
+    io:format("~p ~p DATA PATTERN 3~n", [State#state.cm, State#state.channel]),
+    State#state{pending=Data};
+
+handle_data(Data, #state{pending=Pending}=State, Count) ->
+    io:format("~p ~p DATA PATTERN 4~n", [State#state.cm, State#state.channel]),
+    handle_data(<<Pending/binary, Data/binary>>, State#state{pending = <<>>}, Count).
+
+
+%%-----------------------------------------------------------------------------
 do_ensure_ssh_keys() ->
     ok = do_ensure_path_or_cmd({?PATH_FILE__SSH_KEY,    ?OS_CMD__SSH_KEY_GEN}),
     ok = do_ensure_path_or_cmd({?PATH_FILE__SSH_HOSTKEY,?OS_CMD__SSH_HOSTKEY_GEN}),
