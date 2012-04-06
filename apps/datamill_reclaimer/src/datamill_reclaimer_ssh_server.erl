@@ -3,7 +3,7 @@
 -behaviour(ssh_channel).
 
 %% API
--export([start/0]).
+-export([start_link/0]).
 
 %% Callbacks
 -export([init/1, handle_ssh_msg/2, handle_msg/2, terminate/2, code_change/3]).
@@ -24,7 +24,7 @@
 %% API
 %%=============================================================================
 
-start() ->
+start_link() ->
     ok = do_ensure_ssh_keys(),
     ok = crypto:start(),
     ok = ssh:start(),
