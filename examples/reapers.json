@@ -6,13 +6,20 @@
             "name": "ifconfig",
             "command": "ifconfig"
         },
+
         {
             "name": "loadavg",
             "command": "cat /proc/loadavg"
         },
+
         {
             "name": "vmstat",
             "command": "cat /proc/vmstat"
+        },
+
+        {
+            "name": "top",
+            "command": "top -l 1"
         }
     ]
 }
