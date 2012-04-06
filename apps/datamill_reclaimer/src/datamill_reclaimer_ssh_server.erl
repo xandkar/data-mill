@@ -10,7 +10,14 @@
 
 
 -include("datamill_reclaimer_config.hrl").
--record(state, {cm, channel, pending :: binary()}).
+
+-record(state,
+    {
+        cm      :: pid(),      % ssh_connection_ref()
+        channel :: integer(),
+        pending :: binary()
+    }
+).
 
 
 %%=============================================================================
